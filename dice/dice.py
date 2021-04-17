@@ -149,13 +149,14 @@ class Dice(IconScoreBase):
         """
        Generates a random # from tx hash, block timestamp and user provided
        seed. The block timestamp provides the source of unpredictability.
-
        :param user_seed: 'Lucky phrase' provided by user, defaults to ""
        :type user_seed: str,optional
        :return: Number from [x / 100000.0 for x in range(100000)]
        :rtype: float
        """
         Logger.debug(f'Entered get_random.', TAG)
+        if self.msg.sender.is_contract:
+            revert("ICONbet: SCORE cant play games")
         seed = (str(bytes.hex(self.tx.hash)) + str(self.now()) + user_seed)
         spin = (int.from_bytes(sha3_256(seed.encode()), "big") % 100000) / 100000.0
         Logger.debug(f'Result of the spin was {spin}.', TAG)
@@ -168,7 +169,6 @@ class Dice(IconScoreBase):
         """
         Main bet function. It takes the upper and lower number for bet. Upper and lower number must be in the range
         [0,99]. The difference between upper and lower can be in the range of [0,95].
-
         :param upper: Upper number user can bet. It must be in the range [0,99]
         :type upper: int
         :param lower: Lower number user can bet. It must be in the range [0,99]

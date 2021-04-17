@@ -1,4 +1,3 @@
-# %load dice/dice.py
 from iconservice import *
 
 TAG = "DICE"
@@ -7,7 +6,7 @@ UPPER_LIMIT = 99
 LOWER_LIMIT = 0
 MAIN_BET_MULTIPLIER = 98.5
 SIDE_BET_MULTIPLIER = 95
-BET_MIN = 1000000000000000
+BET_MIN = 100000000000000000
 SIDE_BET_TYPES = ["digits_match", "icon_logo1", "icon_logo2"]
 SIDE_BET_MULTIPLIERS = {"digits_match": 9.5, "icon_logo1": 5, "icon_logo2": 95}
 BET_LIMIT_RATIOS_SIDE_BET = {"digits_match": 1140, "icon_logo1": 540, "icon_logo2": 12548}
@@ -275,10 +274,12 @@ class Dice(IconScoreBase):
         """
         if side_bet_type == SIDE_BET_TYPES[0]:  # digits_match
             return winning_number % 11 == 0
-        if side_bet_type == SIDE_BET_TYPES[1]:  # for icon logo1 ie for numbers having 1 zero in it
+        elif side_bet_type == SIDE_BET_TYPES[1]:  # for icon logo1 ie for numbers having 1 zero in it
             return str(0) in str(winning_number) or winning_number in range(1, 10)
-        if side_bet_type == SIDE_BET_TYPES[2]:  # for icon logo2 ie for 0
+        elif side_bet_type == SIDE_BET_TYPES[2]:  # for icon logo2 ie for 0
             return winning_number == 0
+        else:
+            return False
 
     @payable
     def fallback(self):
